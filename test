@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wecare Data Viewer</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 2rem; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { color: #333; }
+    button { background: #1a73e8; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #155cc1; }
+    pre { background: #eee; padding: 1rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+    .error { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📄 Xem dữ liệu bảng <span id="table-name">crdfd_employee</span></h2>
+    <button onclick="loadData()">📥 Load Data</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    // ⚙️ Cấu hình bảng và web app endpoint
+    const tableName = "crdfd_employee";
+    const webAppId = "AKfycbz1fvA0SjryMl4_4K_Xf75gvaVQCuHzrJ7WJQsjg9GhOrnezEMDcjYyGBgF3QFr2xig";
+    const url = `https://script.google.com/macros/s/${webAppId}/exec?sheet=${tableName}`;
+
+    async function loadData() {
+      const output = document.getElementById('output');
+      output.innerHTML = '⏳ Đang tải dữ liệu...';
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
+        const json = await res.json();
+
+        output.innerHTML = `<pre>${JSON.stringify(json, null, 2)}</pre>`;
+      } catch (err) {
+        output.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
